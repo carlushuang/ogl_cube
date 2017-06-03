@@ -30,3 +30,19 @@
 *.exe
 *.out
 *.app
+ogl_cube
+
+# Eclipse
+.project
+.cproject
+.metadata/
+
+# NetBean
+nbproject/
+
+# VS code
+.vscode
+nbproject/
+
+# VS code
+.vscodecode/
