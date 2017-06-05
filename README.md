@@ -1,5 +1,5 @@
 # ogl_cube
-observer a cube with basic arcball camera
+observe a cube with basic arcball camera
 ![](screenshot/screen_01.jpg)
 
 ## build
@@ -16,7 +16,7 @@ if not supported, consider use mesa driver from [oibaf graphics ppa](https://lau
 compile and test on ubuntu 14.04/16.04, intel gpu with mesa driver. to compile, run [build.sh](build.sh)
 
 ## misc
-use "A,W,S,D" to turn camera, use mouse scroll to zoom in/out
+use "A,W,S,D" to turn camera, "R" to reset camera, use mouse scroll to zoom in/out
 
 for opengl 330 core, if not properly run, need use
 ```
