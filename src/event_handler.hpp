@@ -30,8 +30,6 @@ public:
         glfwSetErrorCallback(error_callback);   //valid before glfwinit()
     }
     ~EventHandler(){}
-    //virtual void dispatch_key_pressed(int key)=0;
-    //virtual void dispatch_scroll(double xoffset, double yoffset)=0;
 
     typedef EventHandler<T> Type;  // self type
     typedef int glfw_key_type;      //GLFW_KEY_*
@@ -90,7 +88,7 @@ template<class T> void EventHandler<T>::key_callback(GLFWwindow* window, int key
     }
 }
 template<class T> void EventHandler<T>::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    std::cout<<"xoff:"<<xoffset<<" yoff:"<<yoffset<<std::endl;
+    //std::cout<<"xoff:"<<xoffset<<" yoff:"<<yoffset<<std::endl;
     steady_handler->dispatch_scroll(xoffset, yoffset);
 }
 template<class T> void EventHandler<T>::error_callback(int error, const char* description) {

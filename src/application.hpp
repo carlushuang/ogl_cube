@@ -9,30 +9,32 @@
 #include <memory>
 
 #include "event_handler.hpp"
+#include "context.hpp"
 
-//#include "camera.hpp"
-//#include "cube.hpp"
-//#include "context.hpp"
 class Camera;
 class Cube;
-class Context;
 
-class Application : public EventDispatcher{
+struct WindowInfo{
+    int width;
+    int height;
+    std::string title;
+};
+
+class Application : public Context{
 public:
-    static const std::string WINDOW_TITLE;
-    static const int WINDOW_WIDTH;
-    static const int WINDOW_HEIGHT;
+    static const WindowInfo window_info;
     static const int FPS;
+    static const int FPS_SAMPLE_MSEC;
     Application();
     ~Application();
-    void startMainLoop();
+    void start_main_loop();
 
     Camera & get_camera() {return *camera;}
     virtual void dispatch_key_pressed(int key);
     virtual void dispatch_scroll(double xoffset, double yoffset);
+    Context & get_context(){return *this;}
 private:
-    // order important! will dtor in reverse order
-    std::unique_ptr<Context> context;
+    // ctor order important! will dtor in reverse order
     std::unique_ptr<Cube>    cube;
     std::unique_ptr<Camera>  camera;
 

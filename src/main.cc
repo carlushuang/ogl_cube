@@ -5,5 +5,5 @@
  */
 int main(int argc, char ** argv){
     Application ap;
-    ap.startMainLoop();
+    ap.start_main_loop();
 }

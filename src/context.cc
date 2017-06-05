@@ -2,10 +2,7 @@
 #include "context.hpp"
 #include "application.hpp"
 
-//#include 
-
-Context::Context(Application * _app):EventHandler(){
-    app = _app;
+Context::Context(const WindowInfo &wi):EventHandler(){
     if (!glfwInit())
         exit(EXIT_FAILURE);
     /* glfw window and context */
@@ -22,17 +19,17 @@ Context::Context(Application * _app):EventHandler(){
 #endif
 
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(Application::WINDOW_WIDTH, Application::WINDOW_HEIGHT, Application::WINDOW_TITLE.c_str(), NULL, NULL);
+    window = glfwCreateWindow(wi.width, wi.height, wi.title.c_str(), NULL, NULL);
     if( window == NULL ){
         std::cout<<"glfwCreateWindow fail"<<std::endl;
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
-    //glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
 
     glewExperimental = GL_TRUE;
     glewInit();
-    //glfwSetKeyCallback(window, key_callback);
+
     set_steady_window(window);
     set_steady_handler(this);
     set_window_handlers();
@@ -62,11 +59,4 @@ void Context::swap_buffer(){
 }
 bool Context::should_close(){
     return glfwWindowShouldClose(window)?true:false;
-}
-void Context::dispatch_key_pressed(int key){
-    app->dispatch_key_pressed(key);
-}
-
-void Context::dispatch_scroll(double xoffset, double yoffset){
-    app->dispatch_scroll(xoffset, yoffset);
 }

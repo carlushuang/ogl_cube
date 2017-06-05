@@ -6,37 +6,36 @@
 #include <iostream>
 #include <chrono>
 
-const std::string Application::WINDOW_TITLE="ogl_cube";
-const int Application::WINDOW_WIDTH=1080;
-const int Application::WINDOW_HEIGHT=720;
 const int Application::FPS = 60;
+const int Application::FPS_SAMPLE_MSEC = 1400;
+const WindowInfo Application::window_info = {.width = 1080, .height = 720, .title="ogl_cube"};
 Application::Application():
-    context(new Context(this)),
+    Context(window_info),
     cube(new Cube(this)),
-    camera(new Camera((float)Application::WINDOW_WIDTH/(float)Application::WINDOW_HEIGHT)),
+    camera(new Camera((float)window_info.width/(float)window_info.height)),
     frame_cnt(0),
     thread_should_exit(false)
 {
 
 }
-void Application::startMainLoop(){
+void Application::start_main_loop(){
     fps_thread=std::move(std::thread([&,this](){
-        const static int SAMPLE_MSEC = 1400;
-        std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLE_MSEC));
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(FPS_SAMPLE_MSEC));
         while(!thread_should_exit){
             int frames = frame_cnt.exchange(0);
-            //std::cout<<"FPS:"<<((float)frames)*1000/SAMPLE_MSEC<<std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLE_MSEC));
+            //std::cout<<"FPS:"<<((float)frames)*1000/FPS_SAMPLE_MSEC<<std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(FPS_SAMPLE_MSEC));
         }
     }));
 
-    while(!context->should_close()){
+    while(!get_context().should_close()){
         auto time_start = std::chrono::steady_clock::now();
         auto time_next = time_start +
                 std::chrono::microseconds(1000000 / Application::FPS);
         draw_frame();
-        context->swap_buffer();
-        context->poll();
+        get_context().swap_buffer();
+        get_context().poll();
 
         frame_cnt++;  // safe for atomic
         // we fix FPS in main thread
@@ -61,8 +60,8 @@ void Application::draw_frame(){
 }
 
 void Application::dispatch_key_pressed(int key){
-    camera->handle_control(context->get_key_control(key));
+    camera->handle_control(get_context().get_key_control(key));
 }
 void Application::dispatch_scroll(double xoffset, double yoffset){
-    camera->handle_control(context->get_scroll_control(xoffset, yoffset));
+    camera->handle_control(get_context().get_scroll_control(xoffset, yoffset));
 }
