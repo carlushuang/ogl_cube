@@ -18,18 +18,20 @@ enum class Control{
 
 class EventDispatcher{
 public:
+    EventDispatcher()=default;
+    virtual ~EventDispatcher(){}
     virtual void dispatch_key_pressed(int key)=0;
     virtual void dispatch_scroll(double xoffset, double yoffset)=0;
 };
 
 template<class T>
-class EventHandler : public EventDispatcher{
+class EventHandler {
 public:
     /* template class to let static member has only one instance per derived class */
     EventHandler(){
         glfwSetErrorCallback(error_callback);   //valid before glfwinit()
     }
-    ~EventHandler(){}
+    virtual ~EventHandler(){}
 
     typedef EventHandler<T> Type;  // self type
     typedef int glfw_key_type;      //GLFW_KEY_*
@@ -38,9 +40,9 @@ public:
     static Control get_key_control(glfw_key_type key);
     static Control get_scroll_control(double x, double y);
 protected:
-    static Type* steady_handler;
+    static EventDispatcher* steady_handler;
     static GLFWwindow* steady_window;
-    static void set_steady_handler(Type* _steady_handler){steady_handler=_steady_handler;}
+    static void set_steady_handler(EventDispatcher* _steady_handler){steady_handler=_steady_handler;}
     static void set_steady_window(GLFWwindow* _steady_window){steady_window=_steady_window;}
     static void set_window_handlers(){
         glfwSetFramebufferSizeCallback(steady_window, framebuffer_size_callback);
@@ -53,7 +55,7 @@ protected:
     static void error_callback(int error, const char* description);
     static key_map_type key_map;
 };
-template<class T> typename EventHandler<T>::Type* EventHandler<T>::steady_handler=nullptr;
+template<class T> EventDispatcher* EventHandler<T>::steady_handler=nullptr;
 template<class T> GLFWwindow* EventHandler<T>::steady_window=nullptr;
 template<class T> typename EventHandler<T>::key_map_type EventHandler<T>::key_map={
     {GLFW_KEY_W, Control::CTRL_CAMERA_UP},
@@ -84,12 +86,14 @@ template<class T> void EventHandler<T>::framebuffer_size_callback(GLFWwindow* wi
 template<class T> void EventHandler<T>::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if(action == GLFW_PRESS || action == GLFW_REPEAT){
         //std::cout<<"KEY: "<<key<<std::endl;
-        steady_handler->dispatch_key_pressed(key);
+        if(steady_handler)
+            steady_handler->dispatch_key_pressed(key);
     }
 }
 template<class T> void EventHandler<T>::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     //std::cout<<"xoff:"<<xoffset<<" yoff:"<<yoffset<<std::endl;
-    steady_handler->dispatch_scroll(xoffset, yoffset);
+    if(steady_handler)
+        steady_handler->dispatch_scroll(xoffset, yoffset);
 }
 template<class T> void EventHandler<T>::error_callback(int error, const char* description) {
     fprintf(stderr, "Error: %s\n", description);

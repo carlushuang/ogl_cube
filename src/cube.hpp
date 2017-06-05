@@ -2,22 +2,21 @@
 #define __CUBE_HPP
 
 #include "gl_common.hpp"
-class Application;
+#include "camera.hpp"
+#include "render_object.hpp"
 
-
-class Cube{
+class Cube : public RenderObject{
 public:
-    Cube(Application * _app);
+    Cube();
     ~Cube();
-    void draw();
+    
+    virtual void update(Camera & camera);
+    virtual void draw();
 private:
-    Application * app;
     GLuint vao;
     GLuint vbo;
     GLuint texture;
     GLuint program;
-
-    glm::mat4 mat_model;
 };
 //--------------------------------------------------------------------------------------
 

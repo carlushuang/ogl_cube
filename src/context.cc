@@ -2,7 +2,7 @@
 #include "context.hpp"
 #include "application.hpp"
 
-Context::Context(const WindowInfo &wi):EventHandler(){
+Context::Context(const WindowInfo &wi, EventDispatcher * ed):EventHandler(){
     if (!glfwInit())
         exit(EXIT_FAILURE);
     /* glfw window and context */
@@ -31,7 +31,7 @@ Context::Context(const WindowInfo &wi):EventHandler(){
     glewInit();
 
     set_steady_window(window);
-    set_steady_handler(this);
+    set_steady_handler(ed);
     set_window_handlers();
     std::cout<<"Opengl Version: "<<glGetString(GL_VERSION)<<std::endl;
     std::cout<<"GLSL Version: "<<glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::endl;

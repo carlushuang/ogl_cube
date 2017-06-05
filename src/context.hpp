@@ -10,7 +10,7 @@ class WindowInfo;
 //--------------------------------------------------------------------------------------
 class Context:public EventHandler<Context>{
 public:
-    Context(const WindowInfo &wi);
+    Context(const WindowInfo &wi, EventDispatcher * ed);
     ~Context();
 
     void poll();    // return immediately

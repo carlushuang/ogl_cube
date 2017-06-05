@@ -96,8 +96,7 @@ static const GLushort cube_elements[] = {
 #endif
 
 
-Cube::Cube(Application * _app){
-    app = _app;
+Cube::Cube(){
     /* shaders */
     program = Utils::create_program({"res/cube.vs","res/cube.fs"});
     /* vao vbo ebo */
@@ -179,14 +178,12 @@ Cube::Cube(Application * _app){
     stbi_image_free(data);
 
     // init model matrix
-    mat_model = glm::mat4(1.0f);
+    set_local_matrix(glm::mat4(1.0f));
 
     // NOTICE:the difference!
     // mat1 = rotate(mat2,radians(r), vec3(1,0,0));
     // not equale to
     // mat1 = mat2 * mat_r  (mat_r : rotated degree matrix)
-    //mat_model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0,1,0)) * mat_model;
-    //std::cout<<"model matrix:"<<std::endl; dump_mat4(mat_model);
 }
 
 Cube::~Cube(){
@@ -198,18 +195,15 @@ Cube::~Cube(){
     std::cout<<"Cube dtor"<<std::endl;
 }
 
-void Cube::draw(){
-
+void Cube::update(Camera & camera){
     glUseProgram(program);
-
-    glm::mat4 mat_mvp = app->get_camera().update_proj_view()*mat_model;
-
+    glm::mat4 mat_mvp = camera.update_proj_view()*get_local_matrix();
     glUniformMatrix4fv(glGetUniformLocation(program, "mat_mvp"), 1, GL_FALSE, glm::value_ptr(mat_mvp));
-
     glUniform1i(glGetUniformLocation(program, "cube_texture"), 0);
+}
+void Cube::draw(){
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, sizeof(cube_vertices)/sizeof(cube_vertices[0]));
     //glDrawArrays(GL_TRIANGLES, 0, 3);
