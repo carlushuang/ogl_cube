@@ -98,7 +98,7 @@ static const GLushort cube_elements[] = {
 
 Cube::Cube(){
     /* shaders */
-    program = Utils::create_program({"res/cube.vs","res/cube.fs"});
+    program = Utils::create_program({"res/shaders/cube.vs","res/shaders/cube.fs"});
     /* vao vbo ebo */
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -164,7 +164,7 @@ Cube::Cube(){
     int width, height, nrComponents;
     // opengl will map texture upside down, hence we need flip back
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("res/OpenGL_Tutorial_Texture.jpg", &width, &height, &nrComponents, 0);
+    unsigned char *data = stbi_load("res/textures/OpenGL_Tutorial_Texture.jpg", &width, &height, &nrComponents, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
