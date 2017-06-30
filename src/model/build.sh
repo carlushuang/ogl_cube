@@ -1,8 +1,9 @@
 #!/bin/sh
 
-SRC="$(ls src/*.cc) $(ls src/model/*.cc)"
-TARGET=ogl_cube
-CFLAGS="-Wall `pkg-config  --cflags glfw3` `pkg-config --cflags assimp` -Isrc -Isrc/model"
+
+SRC="$(ls ./*.cc)"
+TARGET=test_model
+CFLAGS="-Wall `pkg-config  --cflags glfw3` `pkg-config --cflags assimp` -I./ -I../ -DTEST_MODEL"
 LDFLAGS="-lGL -lglfw -lm `pkg-config --libs glew` `pkg-config --libs assimp` -lpthread"
 
 rm -rf $TARGET *.o
